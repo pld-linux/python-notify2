@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	doc	# don't build doc
+%bcond_without	doc	# don't build doc
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
@@ -27,6 +27,9 @@ BuildRequires:	sphinx-pdg
 BuildRequires:	python3-devel
 BuildRequires:	python3-setuptools
 %endif
+%if %{with doc}
+BuildRequires:	sphinx-pdg
+%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -41,6 +44,17 @@ Group:		Libraries/Python
 %description -n python3-%{pypi_name}
 This is a pure Python replacement for notify-python, using python-dbus
 to communicate with the notifications server directly.
+
+%package apidocs
+Summary:	%{module} API documentation
+Summary(pl.UTF-8):	Dokumentacja API %{module}
+Group:		Documentation
+
+%description apidocs
+API documentation for %{module}.
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API %{module}.
 
 %prep
 %setup -q -n %{pypi_name}-%{version}
@@ -66,10 +80,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %py_install
 %py_postclean
+install -d $RPM_BUILD_ROOT%{_examplesdir}/python-%{module}-%{version}
+cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/python-%{module}-%{version}
 %endif
 
 %if %{with python3}
 %py3_install
+install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-%{pypi_name}-%{version}
+cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/python3-%{pypi_name}-%{version}
 %endif
 
 %clean
@@ -80,6 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{py_sitescriptdir}/%{pypi_name}.py[co]
 %{py_sitescriptdir}/%{egg_name}-%{version}-py*.egg-info
+%{_examplesdir}/python-%{module}-%{version}
 %endif
 
 %if %{with python3}
@@ -88,10 +107,11 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitescriptdir}/%{pypi_name}.py
 %{py3_sitescriptdir}/__pycache__/*.pyc
 %{py3_sitescriptdir}/%{egg_name}-%{version}-py*.egg-info
+%{_examplesdir}/python3-%{pypi_name}-%{version}
 %endif
 
 %if %{with doc}
-%files doc
+%files apidocs
 %defattr(644,root,root,755)
-%doc html
+%doc html/*
 %endif
