@@ -19,15 +19,15 @@ URL:		https://bitbucket.org/takluyver/pynotify2
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
-BuildRequires:	python-devel
+BuildRequires:	python-modules
 BuildRequires:	python-setuptools
-BuildRequires:	sphinx-pdg
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel
+BuildRequires:	python3-modules
 BuildRequires:	python3-setuptools
 %endif
 %if %{with doc}
+BuildRequires:	python3-devel-tools
 BuildRequires:	sphinx-pdg
 %endif
 BuildArch:	noarch
