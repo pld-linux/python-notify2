@@ -4,8 +4,8 @@
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
-%define 	module		notify2
-%define 	egg_name	notify2
+%define		module		notify2
+%define		egg_name	notify2
 %define		pypi_name	notify2
 Summary:	Python 2 interface to DBus notifications
 Name:		python-%{pypi_name}
@@ -82,12 +82,18 @@ rm -rf $RPM_BUILD_ROOT
 %py_postclean
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python-%{module}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/python-%{module}-%{version}
+%{__rm} $RPM_BUILD_ROOT%{_examplesdir}/python-%{pypi_name}-%{version}/notify2.py
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python}\1,' \
+	$RPM_BUILD_ROOT%{_examplesdir}/python-%{module}-%{version}/*.py
 %endif
 
 %if %{with python3}
 %py3_install
 install -d $RPM_BUILD_ROOT%{_examplesdir}/python3-%{pypi_name}-%{version}
 cp -a examples/* $RPM_BUILD_ROOT%{_examplesdir}/python3-%{pypi_name}-%{version}
+%{__rm} $RPM_BUILD_ROOT%{_examplesdir}/python3-%{pypi_name}-%{version}/notify2.py
+%{__sed} -E -i -e '1s,#!\s*/usr/bin/env\s+python(\s|$),#!%{__python3}\1,' \
+	$RPM_BUILD_ROOT%{_examplesdir}/python3-%{module}-%{version}/*.py
 %endif
 
 %clean
