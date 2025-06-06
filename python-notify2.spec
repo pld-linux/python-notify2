@@ -10,7 +10,7 @@
 Summary:	Python 2 interface to DBus notifications
 Name:		python-%{pypi_name}
 Version:	0.3.1
-Release:	10
+Release:	11
 License:	BSD
 Group:		Libraries/Python
 Source0:	https://files.pythonhosted.org/packages/source/n/%{pypi_name}/%{pypi_name}-%{version}.tar.gz
@@ -58,6 +58,11 @@ Dokumentacja API %{module}.
 
 %prep
 %setup -q -n %{pypi_name}-%{version}
+
+%if %{with doc}
+# incorrect mapping?
+%{__sed} -i -e '/^intersphinx_mapping/,/^}/ d' docs/conf.py
+%endif
 
 %build
 %if %{with python2}
